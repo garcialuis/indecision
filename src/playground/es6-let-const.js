@@ -31,7 +31,7 @@ var fullName = 'Luis Garcia'
 
 if (fullName) {
     var firstName = fullName.split(' ')[0]
-    console.log(fistName)
+    console.log(firstName)
 }
 
 // firstName is available bc the if was not a function
