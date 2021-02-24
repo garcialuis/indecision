@@ -1,8 +1,24 @@
-const Header = () => {
+const IndecisionApp = () => {
+  
+  const title = 'Indecision'
+  const subtitle = 'Put your life in the hands of a computer'
+  const options = ['thing one', 'thing two', 'thing three']
+  
   return (
     <div>
-      <h1>Indecision</h1>
-      <h2>Put your life in the hands of a computer</h2>
+      <Header title={title} subtitle={subtitle}/>
+      <Action />
+      <Options options={options}/>
+      <AddOption />
+    </div>
+  );
+}
+
+const Header = ({title, subtitle}) => {
+  return (
+    <div>
+      <h1>{title}</h1>
+      <h2>{subtitle}</h2>
     </div>
   );
 }
@@ -15,19 +31,21 @@ const Action = () => {
   );
 }
 
-const Options = () => {
+const Options = ({options}) => {
   return (
     <div>
-      <p>Option component here</p>
-      <Option />
+      <p>{options.length} Options: </p>
+      {
+        options.map((option) => <Option key={option} optionText={option} />)
+      }
     </div>
   );
 }
 
-const Option = () => {
+const Option = ({optionText}) => {
   return (
     <div>
-      This is an option
+      {optionText}
     </div>
   );
 }
@@ -39,18 +57,6 @@ const AddOption = () => {
     </div>
   );
 }
-
-const IndecisionApp = () => {
-  return (
-    <div>
-      <Header />
-      <Action />
-      <Options />
-      <AddOption />
-    </div>
-  );
-}
-
 
 function App() {
   return (
