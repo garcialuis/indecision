@@ -54,7 +54,8 @@ class VisibleState extends React.Component {
 }
 */
 
-var appRoot = document.getElementById('root')
-ReactDOM.render(<VisibleState />, appRoot);
+// Uncomment below to render:
+// var appRoot = document.getElementById('root')
+// ReactDOM.render(<VisibleState />, appRoot);
 
 export default VisibleState
