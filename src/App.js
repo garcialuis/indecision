@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useRef} from 'react'
 
 const IndecisionApp = () => {
   
@@ -6,11 +6,50 @@ const IndecisionApp = () => {
   const subtitle = 'Put your life in the hands of a computer'
   const [options, setOptions] = useState([])
 
+  // This is needed in order to keep track of the prev state of options
+  const prevCountRef = useRef();
+  if (options.length === 0) {
+    prevCountRef.current = options
+  }
+
   useEffect(() => {
     console.log('componentDidMount/didUpdate/willUnmount')
+
+    // Below was added to act like (didMount):
+    try {
+      // jsonOptions will be null if there are no values in options:
+      const jsonOptions = localStorage.getItem('options')
+      const parsedOptions = JSON.parse(jsonOptions)
+
+      if (options.length === 0 && parsedOptions) {
+        console.log('options in localstorage but not in state', parsedOptions)
+        setOptions(() => (parsedOptions))
+      }
+      
+    } catch (e) {
+      // (This catch may be encountered when there is invalid json in localStorage)
+      // Do nothing at all. 
+    }
+    
+
+    // Below is acting like (didUpdate)
+    // If useEffect was triggered by the options changing:
+    if (prevCountRef.current.length !== options.length) {
+
+      const json = JSON.stringify(options)
+      localStorage.setItem('options', json)
+
+      console.log(prevCountRef.current)
+    }
+    
+    prevCountRef.current = options;    
+
   })
 
-  const handleDeleteOptions = () => setOptions([])
+  const handleDeleteOptions = () => {
+    setOptions([])
+    localStorage.clear()
+  }
 
   const handleDeleteOption = (optionToRemove) => {
     setOptions(options.filter((option) => option !== optionToRemove))
@@ -82,6 +121,7 @@ const Options = ({options, handleDeleteOptions, handleDeleteOption}) => {
   return (
     <div>
       <button onClick={handleDeleteOptions}>Remove all</button>
+      {options.length === 0 && <p>There are no options</p>}
       {
         options.map((option) => (
           <Option key={option} 
@@ -119,6 +159,10 @@ const AddOption = ({handleAddOption}) => {
     const option = e.target.elements.option.value.trim()
     const errorMsg = handleAddOption(option) // handleAddOption is defined at parent
     setError(errorMsg)
+
+    if (!errorMsg) {
+      e.target.elements.option.value = ''
+    }
 
   }
 
