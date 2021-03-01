@@ -1,22 +1,41 @@
-import {useState} from 'react'
+import {useState, useEffect} from 'react'
 
 const IndecisionApp = () => {
   
-  const title = 'Indecision'
+  // const title = 'Indecision' No longer passed down to component, as header has a default prop: title
   const subtitle = 'Put your life in the hands of a computer'
-  const [options, setOptions] = useState(['thing one', 'thing two', 'thing three'])
+  const [options, setOptions] = useState([])
+
+  useEffect(() => {
+    console.log('componentDidMount/didUpdate/willUnmount')
+  })
 
   const handleDeleteOptions = () => setOptions([])
+
+  const handleDeleteOption = (optionToRemove) => {
+    setOptions(options.filter((option) => option !== optionToRemove))
+  }
 
   const handlePick = () => {
     const randomNum = Math.floor(Math.random() * options.length);
     const option = options[randomNum]
     alert(option)
   }
+
+  const handleAddOption = (option) => {
+
+    if(!option) {
+      return 'Enter valid value to add item'
+    } else if (options.indexOf(option) > -1) {
+      return 'This option already exists'
+    }
+
+    setOptions(options.concat(option))
+  }
   
   return (
     <div>
-      <Header title={title} subtitle={subtitle}/>
+      <Header subtitle={subtitle}/>
       <Action 
         hasOptions={options.length > 0}
         handlePick={handlePick} 
@@ -24,8 +43,11 @@ const IndecisionApp = () => {
       <Options 
         options={options}
         handleDeleteOptions={handleDeleteOptions}
+        handleDeleteOption={handleDeleteOption}
       />
-      <AddOption />
+      <AddOption 
+        handleAddOption={handleAddOption}
+      />
     </div>
   );
 }
@@ -34,10 +56,14 @@ const Header = ({title, subtitle}) => {
   return (
     <div>
       <h1>{title}</h1>
-      <h2>{subtitle}</h2>
+      {subtitle && <h2>{subtitle}</h2>}
     </div>
   );
 }
+
+Header.defaultProps = {
+  title: 'Indecision'
+};
 
 const Action = ({hasOptions, handlePick}) => {
 
@@ -52,41 +78,54 @@ const Action = ({hasOptions, handlePick}) => {
   );
 }
 
-const Options = ({options, handleDeleteOptions}) => {
+const Options = ({options, handleDeleteOptions, handleDeleteOption}) => {
   return (
     <div>
       <button onClick={handleDeleteOptions}>Remove all</button>
-      <p>{options.length} Options: </p>
       {
-        options.map((option) => <Option key={option} optionText={option} />)
+        options.map((option) => (
+          <Option key={option} 
+            optionText={option} 
+            handleDeleteOption={handleDeleteOption}
+          />
+        ))
       }
     </div>
   );
 }
 
-const Option = ({optionText}) => {
+const Option = ({optionText, handleDeleteOption}) => {
   return (
     <div>
       {optionText}
+      <button 
+        onClick={(e) => {
+         handleDeleteOption(optionText)
+        }}
+      > 
+        Remove
+      </button>
     </div>
   );
 }
 
-const AddOption = () => {
+const AddOption = ({handleAddOption}) => {
 
-  const handleAddOption = (e) => {
+  const [error, setError] = useState()
+
+  const handleAddOptionInput = (e) => {
 
     e.preventDefault()
     const option = e.target.elements.option.value.trim()
+    const errorMsg = handleAddOption(option) // handleAddOption is defined at parent
+    setError(errorMsg)
 
-    if (option) {
-      alert(option)
-    }
   }
 
   return (
     <div>
-      <form onSubmit={handleAddOption}>
+      {error && <p>{error}</p>}
+      <form onSubmit={handleAddOptionInput}>
         <input type='text' name='option' placeholder='option here'/>
         <button>Submit</button>
       </form>
