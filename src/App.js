@@ -8,20 +8,18 @@ const IndecisionApp = () => {
 
   // This is needed in order to keep track of the prev state of options
   const prevCountRef = useRef();
-  if (options.length === 0) {
-    prevCountRef.current = options
-  }
 
+  // Below was added to act like (didMount):
   useEffect(() => {
     console.log('componentDidMount/didUpdate/willUnmount')
+    prevCountRef.current = options
 
-    // Below was added to act like (didMount):
     try {
       // jsonOptions will be null if there are no values in options:
       const jsonOptions = localStorage.getItem('options')
       const parsedOptions = JSON.parse(jsonOptions)
 
-      if (options.length === 0 && parsedOptions) {
+      if (parsedOptions) {
         console.log('options in localstorage but not in state', parsedOptions)
         setOptions(() => (parsedOptions))
       }
@@ -32,18 +30,19 @@ const IndecisionApp = () => {
     }
     
 
-    // Below is acting like (didUpdate)
+      
+
+  }, [])
+
+  // Below is acting like (didUpdate)
+  useEffect(() => {
     // If useEffect was triggered by the options changing:
     if (prevCountRef.current.length !== options.length) {
-
       const json = JSON.stringify(options)
       localStorage.setItem('options', json)
-
-      console.log(prevCountRef.current)
     }
     
-    prevCountRef.current = options;    
-
+    prevCountRef.current = options;
   })
 
   const handleDeleteOptions = () => {
