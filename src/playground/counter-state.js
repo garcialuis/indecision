@@ -1,9 +1,34 @@
-import {React, useState} from 'react'
+import {React, useState, useEffect, useRef} from 'react'
 import ReactDOM from 'react-dom'
 
 const Counterstate = () => {
 
     const [count, setCount] = useState(0)
+    const prevCount = useRef()
+
+    //DidMount
+    useEffect(() => {
+        prevCount.current = count
+        // read local storage
+        const stringCount = localStorage.getItem('count')
+        if (stringCount) {
+            if(!isNaN(stringCount)){
+                const storedCount = parseInt(stringCount, 10)
+                setCount(storedCount)
+            }
+        }
+
+    }, [])
+
+    //DidUpdate for count state
+    useEffect(() => {
+
+        if (prevCount.current !== count) {
+            localStorage.setItem('count', count)
+        }
+
+        prevCount.current = count
+    }, [count])
 
     const handleAddOne = () => {
         console.log('handleAddOne')
