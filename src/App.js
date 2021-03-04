@@ -28,9 +28,6 @@ const IndecisionApp = () => {
       // (This catch may be encountered when there is invalid json in localStorage)
       // Do nothing at all. 
     }
-    
-
-      
 
   }, [])
 
