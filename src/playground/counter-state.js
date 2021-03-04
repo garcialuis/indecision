@@ -1,9 +1,9 @@
 import {React, useState} from 'react'
 import ReactDOM from 'react-dom'
 
-const Counterstate = ({initialCount}) => {
+const Counterstate = () => {
 
-    const [count, setCount] = useState(initialCount)
+    const [count, setCount] = useState(0)
 
     const handleAddOne = () => {
         console.log('handleAddOne')
@@ -29,10 +29,6 @@ const Counterstate = ({initialCount}) => {
             
         </div>
     );
-}
-
-Counterstate.defaultProps = {
-    initialCount: 0
 }
 
 export default Counterstate
