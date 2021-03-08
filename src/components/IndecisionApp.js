@@ -3,11 +3,13 @@ import AddOption from './AddOption'
 import Header from './Header'
 import Options from './Options'
 import Action from './Action'
+import OptionModal from './OptionModal'
 
 const IndecisionApp = () => {
     // const title = 'Indecision' No longer passed down to component, as header has a default prop: title
   const subtitle = 'Put your life in the hands of a computer'
   const [options, setOptions] = useState([])
+  const [selectedOption, setSelectedOption] = useState()
 
   // This is needed in order to keep track of the prev state of options
   const prevCountRef = useRef();
@@ -45,6 +47,10 @@ const IndecisionApp = () => {
     prevCountRef.current = options;
   })
 
+  const handleClearSelectedOption = () => {
+    setSelectedOption(undefined)
+  }
+
   const handleDeleteOptions = () => {
     setOptions([])
     localStorage.clear()
@@ -57,7 +63,8 @@ const IndecisionApp = () => {
   const handlePick = () => {
     const randomNum = Math.floor(Math.random() * options.length);
     const option = options[randomNum]
-    alert(option)
+    // alert(option)
+    setSelectedOption(option)
   }
 
   const handleAddOption = (option) => {
@@ -85,6 +92,10 @@ const IndecisionApp = () => {
       />
       <AddOption 
         handleAddOption={handleAddOption}
+      />
+      <OptionModal 
+        selectedOption={selectedOption}
+        handleClearSelectedOption={handleClearSelectedOption}
       />
     </div>
   );
