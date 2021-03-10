@@ -4,6 +4,7 @@ const Option = ({optionText, handleDeleteOption}) => (
   <div>
     {optionText}
     <button 
+      className='button button--link'
       onClick={(e) => {
         handleDeleteOption(optionText)
       }}

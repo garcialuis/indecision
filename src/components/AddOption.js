@@ -21,7 +21,7 @@ const AddOption = ({handleAddOption}) => {
         {error && <p>{error}</p>}
         <form onSubmit={handleAddOptionInput}>
             <input type='text' name='option' placeholder='option here'/>
-            <button>Add Option</button>
+            <button className='button'>Add Option</button>
         </form>
         </div>
     );
