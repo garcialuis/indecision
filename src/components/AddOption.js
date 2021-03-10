@@ -18,9 +18,9 @@ const AddOption = ({handleAddOption}) => {
 
     return (
         <div>
-        {error && <p>{error}</p>}
-        <form onSubmit={handleAddOptionInput}>
-            <input type='text' name='option' placeholder='option here'/>
+        {error && <p className='add-option-error'>{error}</p>}
+        <form className='add-option' onSubmit={handleAddOptionInput}>
+            <input className='add-option__input' type='text' name='option' placeholder='option here'/>
             <button className='button'>Add Option</button>
         </form>
         </div>
